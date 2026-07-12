@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BlackSibaInu — Full-Stack Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;800;900&family=Manrope:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050505;
+  --fg:#f2f2f2;
+  --muted:#8a8a8a;
+  --dim:#565656;
+  --line:rgba(255,255,255,.09);
+  --line-strong:rgba(255,255,255,.35);
+  --card:rgba(255,255,255,.025);
+  --display:'Unbounded','Arial Black',sans-serif;
+  --body:'Manrope','Segoe UI',-apple-system,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--fg);
+  font-family:var(--body);
+  font-weight:300;
+  line-height:1.65;
+  overflow-x:hidden;
+}
+::selection{background:#fff;color:#000}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:#0a0a0a}
+::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:4px}
+::-webkit-scrollbar-thumb:hover{background:#444}
+
+@media (hover:hover){
+  body, a, button{cursor:none}
+}
+
+#bg{position:fixed;inset:0;z-index:0;display:block}
+.noise{
+  position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.045;
+  background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2"/></filter><rect width="220" height="220" filter="url(%23n)"/></svg>');
+}
+.vignette{
+  position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.55) 100%);
+}
+
+#progress{position:fixed;top:0;left:0;height:2px;width:0;background:#fff;z-index:120}
+
+.cursor-dot{
+  position:fixed;width:6px;height:6px;background:#fff;border-radius:50%;
+  z-index:999;pointer-events:none;transform:translate(-50%,-50%);
+}
+.cursor-ring{
+  position:fixed;width:34px;height:34px;border:1px solid rgba(255,255,255,.45);
+  border-radius:50%;z-index:999;pointer-events:none;transform:translate(-50%,-50%);
+  transition:width .25s ease,height .25s ease,border-color .25s ease,opacity .25s ease;
+}
+.cursor-ring.on{width:58px;height:58px;border-color:rgba(255,255,255,.95)}
+@media (hover:none){.cursor-dot,.cursor-ring{display:none}}
+
+main{position:relative;z-index:2}
+
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;text-align:center;
+  padding:0 1.5rem;position:relative;
+}
+h1{
+  font-family:var(--display);font-weight:900;text-transform:uppercase;
+  font-size:clamp(2.7rem,11vw,8.2rem);line-height:.96;letter-spacing:-.015em;
+}
+h1 .line{display:block;animation:fadeUp .9s ease both}
+h1 .line:nth-child(2){animation-delay:.12s}
+h1 .line:nth-child(3){animation-delay:.24s}
+h1 .outline{color:transparent;-webkit-text-stroke:1.5px var(--fg)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+<div class="noise"></div>
+<div class="vignette"></div>
+<div id="progress"></div>
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
+
+<main id="top">
+
+  <section class="hero">
+    <h1>
+      <span class="line">Black</span>
+      <span class="line outline">Siba</span>
+      <span class="line">Inu</span>
+    </h1>
+
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const prog = document.getElementById('progress');
+function setProg(){
+  const h = document.documentElement.scrollHeight - innerHeight;
+  prog.style.width = (h > 0 ? (scrollY / h) * 100 : 0) + '%';
+}
+addEventListener('scroll', setProg, {passive:true});
+setProg();
+
+const dot = document.querySelector('.cursor-dot');
+const ring = document.querySelector('.cursor-ring');
+if (matchMedia('(hover:hover)').matches){
+  let mx = innerWidth/2, my = innerHeight/2, rx = mx, ry = my;
+  addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+  });
+  (function loop(){
+    rx += (mx - rx) * .16; ry += (my - ry) * .16;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(loop);
+  })();
+}
+
+let scy = 0;
+addEventListener('scroll', () => scy = scrollY, {passive:true});
+let nmx = 0, nmy = 0;
+addEventListener('mousemove', e => {
+  nmx = (e.clientX / innerWidth - .5) * 2;
+  nmy = (e.clientY / innerHeight - .5) * 2;
+});
+
+if (window.THREE){
+  const canvas = document.getElementById('bg');
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setSize(innerWidth, innerHeight);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(55, innerWidth/innerHeight, .1, 200);
+  camera.position.z = 9;
+
+  function makeAtom(scale, orbits, ringOpacity, nucleonCount){
+    nucleonCount = nucleonCount || 14;
+    const g = new THREE.Group();
+    const nucleus = new THREE.Group();
+    const sg = new THREE.SphereGeometry(.16, 16, 16);
+    const mw = new THREE.MeshBasicMaterial({color:0xffffff});
+    const mg = new THREE.MeshBasicMaterial({color:0x4a4a4a});
+    for (let i = 0; i < nucleonCount; i++){
+      const s = new THREE.Mesh(sg, i % 2 ? mw : mg);
+      s.position.set((Math.random()-.5)*.5, (Math.random()-.5)*.5, (Math.random()-.5)*.5);
+      nucleus.add(s);
+    }
+    g.add(nucleus);
+    g.userData = {electrons:[], nucleus};
+    for (let i = 0; i < orbits; i++){
+      const o = new THREE.Group();
+      const R = 2.1 + i * .55;
+      o.add(new THREE.Mesh(
+        new THREE.TorusGeometry(R, .007, 8, 180),
+        new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:ringOpacity})
+      ));
+      const e = new THREE.Mesh(
+        new THREE.SphereGeometry(.075, 12, 12),
+        new THREE.MeshBasicMaterial({color:0xffffff})
+      );
+      e.add(new THREE.Mesh(
+        new THREE.SphereGeometry(.17, 12, 12),
+        new THREE.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:.12})
+      ));
+      o.add(e);
+      o.rotation.x = 1.1 * i + .5;
+      o.rotation.y = .9 * i;
+      g.add(o);
+      g.userData.electrons.push({m:e, R, a:Math.random()*6.28, s:.02 + i*.008});
+    }
+    g.scale.setScalar(scale);
+    return g;
+  }
+
+  const A = makeAtom(1, 50, .1, 60);   scene.add(A);
+  const B = makeAtom(.32, 4, .3); B.position.set(-6, 3, -5);    scene.add(B);
+  const C = makeAtom(.22, 4, .3); C.position.set(6.2, -3.4, -7); scene.add(C);
+  const D = makeAtom(.12, 3, .4); D.position.set(-3.5, 2.8, -6);   scene.add(D);
+  const E = makeAtom(.12, 3, .4); E.position.set(3.5, -2.8, -6);   scene.add(E);
+  const F = makeAtom(.08, 3, .5); F.position.set(-2.8, -3.2, -5);    scene.add(F);
+  const G = makeAtom(.08, 3, .5); G.position.set(2.8, 3.2, -5);    scene.add(G);
+  const H = makeAtom(.06, 2, .6); H.position.set(-1.8, 3.5, -4);    scene.add(H);
+  const I = makeAtom(.06, 2, .6); I.position.set(1.8, -3.5, -4);    scene.add(I);
+
+  const SWARM_COUNT = 60;
+  const BOUNDS = {x:22, y:15, z:15};
+  const swarm = [];
+  for (let i = 0; i < SWARM_COUNT; i++){
+    const s = .015 + Math.random() * .035;
+    const at = makeAtom(s, 1, .5);
+    at.position.set(
+      (Math.random()-.5) * BOUNDS.x * 2,
+      (Math.random()-.5) * BOUNDS.y * 2,
+      (Math.random()-.5) * BOUNDS.z * 2 - 4
+    );
+    at.userData.vel = new THREE.Vector3(
+      (Math.random()-.5) * .01,
+      (Math.random()-.5) * .01,
+      (Math.random()-.5) * .008
+    );
+    scene.add(at);
+    swarm.push(at);
+  }
+
+  let t = 0;
+  (function anim(){
+    requestAnimationFrame(anim);
+    t += .008;
+    [A, B, C, D, E, F, G, H, I].forEach((g, gi) => {
+      g.rotation.y += .0022 + gi * .0012;
+      g.userData.nucleus.rotation.y -= .01;
+      g.userData.nucleus.rotation.x += .006;
+      g.userData.electrons.forEach(el => {
+        el.a += el.s;
+        el.m.position.set(Math.cos(el.a) * el.R, Math.sin(el.a) * el.R, 0);
+      });
+    });
+    A.rotation.x = .15 + scy * .0004 + Math.sin(t * .4) * .04;
+    A.position.y = scy * .0018;
+    A.position.x = Math.sin(t * .35) * .2;
+    B.position.y = 3 + scy * .003;
+    C.position.y = -3.4 + scy * .0025;
+    D.position.y = 2.8 + scy * .002;
+    E.position.y = -2.8 + scy * .002;
+    F.position.y = -3.2 + scy * .0015;
+    G.position.y = 3.2 + scy * .0015;
+    H.position.y = 3.5 + scy * .001;
+    I.position.y = -3.5 + scy * .001;
+    swarm.forEach(at => {
+      at.position.add(at.userData.vel);
+      at.rotation.y += .004;
+      at.userData.nucleus.rotation.y -= .015;
+      at.userData.electrons.forEach(el => {
+        el.a += el.s;
+        el.m.position.set(Math.cos(el.a) * el.R, Math.sin(el.a) * el.R, 0);
+      });
+      if (at.position.x > BOUNDS.x) at.position.x = -BOUNDS.x;
+      if (at.position.x < -BOUNDS.x) at.position.x = BOUNDS.x;
+      if (at.position.y > BOUNDS.y) at.position.y = -BOUNDS.y;
+      if (at.position.y < -BOUNDS.y) at.position.y = BOUNDS.y;
+      if (at.position.z > BOUNDS.z - 4) at.position.z = -BOUNDS.z - 4;
+      if (at.position.z < -BOUNDS.z - 4) at.position.z = BOUNDS.z - 4;
+    });
+    camera.position.x += (nmx * .9 - camera.position.x) * .04;
+    camera.position.y += (-nmy * .55 - camera.position.y) * .04;
+    const targetZ = Math.max(2.5, 9 + scy * .012);
+    camera.position.z += (targetZ - camera.position.z) * .06;
+    camera.lookAt(0, 0, 0);
+    renderer.render(scene, camera);
+  })();
+
+  addEventListener('resize', () => {
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+}
+</script>
+</body>
+</html>
