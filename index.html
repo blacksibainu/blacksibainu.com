@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BlackSibaInu — Full-Stack Developer</title>
+<meta name="description" content="Прайс-лист: C++, Java, Python, JavaScript/TypeScript, Godot. Десктоп, сети, игры, моды и плагины для Minecraft, боты, веб.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;800;900&family=Manrope:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -33,6 +34,7 @@ body{
 ::-webkit-scrollbar-track{background:#0a0a0a}
 ::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:4px}
 ::-webkit-scrollbar-thumb:hover{background:#444}
+a{color:inherit}
 
 @media (hover:hover){
   body, a, button{cursor:none}
@@ -79,9 +81,72 @@ h1 .line:nth-child(3){animation-delay:.24s}
 h1 .outline{color:transparent;-webkit-text-stroke:1.5px var(--fg)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
 
+.hero-links{
+  margin-top:2.6rem;display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;
+  animation:fadeUp .9s .4s ease both;
+}
+.btn{
+  display:inline-block;padding:.85rem 1.7rem;border:1px solid var(--line-strong);
+  border-radius:999px;text-decoration:none;font-weight:500;font-size:.9rem;
+  letter-spacing:.04em;transition:background .25s ease,color .25s ease;
+}
+.btn:hover,.btn:focus-visible{background:#fff;color:#000;outline:none}
+
+.wrap{max-width:1040px;margin:0 auto;padding:0 1.5rem}
+section.block{padding:6rem 0}
+.label{
+  font-family:var(--display);font-size:.72rem;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:1rem;
+}
+h2{
+  font-family:var(--display);font-weight:800;text-transform:uppercase;
+  font-size:clamp(1.8rem,5vw,3.2rem);line-height:1.05;letter-spacing:-.01em;
+  margin-bottom:3.2rem;
+}
+
+.cat{
+  border:1px solid var(--line);background:var(--card);border-radius:18px;
+  padding:1.6rem 1.8rem 1rem;margin-bottom:1.4rem;
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+}
+.cat h3{
+  font-family:var(--display);font-weight:500;font-size:1.05rem;
+  letter-spacing:.04em;margin-bottom:.6rem;
+}
+.row{
+  display:flex;justify-content:space-between;align-items:baseline;gap:1.5rem;
+  padding:.95rem 0;border-top:1px solid var(--line);
+}
+.row .name{font-weight:400;max-width:620px}
+.row .name small{display:block;color:var(--muted);font-size:.85rem;font-weight:300;margin-top:.15rem}
+.row .price{
+  font-family:var(--display);font-weight:500;font-size:.88rem;
+  white-space:nowrap;text-align:right;
+}
+@media (max-width:640px){
+  .row{flex-direction:column;gap:.35rem}
+  .row .price{text-align:left}
+  .cat{padding:1.3rem 1.2rem .8rem}
+}
+
+.terms{display:grid;gap:1.4rem;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-top:2.2rem}
+.term{border:1px solid var(--line);border-radius:18px;padding:1.4rem 1.5rem;background:var(--card)}
+.term b{
+  display:block;font-family:var(--display);font-weight:500;font-size:.95rem;margin-bottom:.4rem;
+}
+.term span{color:var(--muted);font-size:.92rem}
+
+.contacts{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:1.6rem}
+.note{color:var(--muted);font-size:.95rem;max-width:560px}
+footer{padding:3rem 0 4rem;color:var(--dim);font-size:.82rem;text-align:center}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001s!important;transition-duration:.001s!important}
   html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none}
 }
 </style>
 </head>
@@ -102,8 +167,81 @@ h1 .outline{color:transparent;-webkit-text-stroke:1.5px var(--fg)}
       <span class="line outline">Siba</span>
       <span class="line">Inu</span>
     </h1>
-
+    <div class="hero-links">
+      <a class="btn" href="#prices">Прайс-лист</a>
+      <a class="btn" href="#contacts">Связаться</a>
+    </div>
   </section>
+
+  <section class="block" id="prices">
+    <div class="wrap">
+      <div class="label reveal">Услуги и цены</div>
+      <h2 class="reveal">Что умею<br>и сколько стоит</h2>
+
+      <div class="cat reveal">
+        <h3>C++</h3>
+        <div class="row"><div class="name">Десктопные программы и утилиты<small>Windows и Linux</small></div><div class="price">$200 – $1 500</div></div>
+        <div class="row"><div class="name">Системные и сетевые программы<small>Перехват трафика, WinDivert, драйверы, VPN-клиенты, kill switch, шифрование</small></div><div class="price">$1 500 – $5 000</div></div>
+        <div class="row"><div class="name">Игры и игровые движки, графика<small>Мини-игры и моды под готовые движки</small></div><div class="price">$300 – $4 000</div></div>
+        <div class="row"><div class="name">Программы с графическим интерфейсом<small>Dear ImGui, Qt, WinAPI</small></div><div class="price">$300 – $2 000</div></div>
+        <div class="row"><div class="name">Оптимизация и портирование существующего кода</div><div class="price">$20 – $35 / час</div></div>
+        <div class="row"><div class="name">Средства защиты, антиотладка<small>Анализ чужих бинарников</small></div><div class="price">от $200</div></div>
+      </div>
+
+      <div class="cat reveal">
+        <h3>Java</h3>
+        <div class="row"><div class="name">Консольные и десктопные программы<small>Swing, JavaFX</small></div><div class="price">$150 – $1 200</div></div>
+        <div class="row"><div class="name">Плагины для Minecraft<small>Paper, Spigot, Bukkit: экономика, MMO-RPG системы, кастомные мобы, мини-игры, анти-чит, привата, донат-системы. От простого плагина до крупной системы</small></div><div class="price">$80 – $1 500</div></div>
+        <div class="row"><div class="name">Моды для Minecraft<small>Fabric, Forge, NeoForge: клиентские и серверные, GUI, визуальные эффекты, радары, новые мобы и предметы</small></div><div class="price">$200 – $2 000</div></div>
+        <div class="row"><div class="name">Лаунчеры для Minecraft<small>Своя авторизация, обновление сборок, привязка к вашему серверу</small></div><div class="price">$400 – $2 500</div></div>
+        <div class="row"><div class="name">Вспомогательные программы для серверов<small>Панели управления, мониторинг, боты связи с Discord и Telegram</small></div><div class="price">$100 – $800</div></div>
+        <div class="row"><div class="name">Сборка и настройка Minecraft-сервера<small>Целый сервер или BungeeCord-сеть с плагинами</small></div><div class="price">$100 – $600</div></div>
+      </div>
+
+      <div class="cat reveal">
+        <h3>Python</h3>
+        <div class="row"><div class="name">Скрипты автоматизации и парсеры</div><div class="price">$30 – $200</div></div>
+        <div class="row"><div class="name">Telegram- и Discord-боты</div><div class="price">$50 – $700</div></div>
+        <div class="row"><div class="name">Веб-бэкенды<small>FastAPI, PostgreSQL</small></div><div class="price">$300 – $3 000</div></div>
+        <div class="row"><div class="name">Анализ данных и обработка файлов</div><div class="price">$40 – $300</div></div>
+        <div class="row"><div class="name">Подключение нейросетей и локальных моделей<small>Ollama, Qwen</small></div><div class="price">$300 – $3 000</div></div>
+      </div>
+
+      <div class="cat reveal">
+        <h3>JavaScript и TypeScript</h3>
+        <div class="row"><div class="name">Сайты и лендинги</div><div class="price">$150 – $400</div></div>
+        <div class="row"><div class="name">React-приложения и SPA</div><div class="price">$400 – $2 000</div></div>
+        <div class="row"><div class="name">Бэкенд на Node.js</div><div class="price">$300 – $3 000</div></div>
+        <div class="row"><div class="name">Десктопные программы на Electron</div><div class="price">$400 – $1 500</div></div>
+        <div class="row"><div class="name">Расширения для VS Code и браузеров</div><div class="price">$200 – $900</div></div>
+      </div>
+
+      <div class="cat reveal">
+        <h3>Godot</h3>
+        <div class="row"><div class="name">2D- и 3D-прототипы</div><div class="price">$150 – $800</div></div>
+        <div class="row"><div class="name">Полноценная небольшая игра</div><div class="price">$800 – $4 000</div></div>
+      </div>
+
+      <div class="terms reveal">
+        <div class="term"><b>$20 / час</b><span>Почасовая ставка на любые задачи.</span></div>
+        <div class="term"><b>Срочные заказы +30–50%</b><span>Срочность оплачивается сверху к стоимости работы.</span></div>
+        <div class="term"><b>Правки сверх согласованного</b><span>Всё, что вне согласованного объёма, идёт по почасовой ставке.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="contacts">
+    <div class="wrap">
+      <div class="label reveal">Контакты</div>
+      <h2 class="reveal">Как<br>связаться</h2>
+      <div class="contacts reveal">
+        <a class="btn" href="https://github.com/blacksibainu" target="_blank" rel="noopener">GitHub · blacksibainu</a>
+      </div>
+      <p class="note reveal">Опишите задачу, желаемые сроки и бюджет. Оценку стоимости и сроков дам после уточнения деталей.</p>
+    </div>
+  </section>
+
+  <footer>© BlackSibaInu</footer>
 </main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -124,11 +262,27 @@ if (matchMedia('(hover:hover)').matches){
     mx = e.clientX; my = e.clientY;
     dot.style.left = mx + 'px'; dot.style.top = my + 'px';
   });
+  document.querySelectorAll('a').forEach(a => {
+    a.addEventListener('mouseenter', () => ring.classList.add('on'));
+    a.addEventListener('mouseleave', () => ring.classList.remove('on'));
+  });
   (function loop(){
     rx += (mx - rx) * .16; ry += (my - ry) * .16;
     ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
     requestAnimationFrame(loop);
   })();
+}
+
+const revealEls = document.querySelectorAll('.reveal');
+if ('IntersectionObserver' in window){
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+    });
+  }, {threshold:.08});
+  revealEls.forEach(el => io.observe(el));
+} else {
+  revealEls.forEach(el => el.classList.add('in'));
 }
 
 let scy = 0;
